@@ -3,6 +3,7 @@ const apiKey = "fb3ca3d4a41c73fdf5013f2563d02016"
 const searchInput = document.getElementById("search")
 const searchList = document.getElementById("search-list")
 const selectedCity = document.getElementById("selected-city")
+const dayTemperature = document.getElementById("day-temperature")
 let currentCity = null
 let cities = []
 
@@ -29,8 +30,20 @@ searchInput.addEventListener("keypress", function() {
         cityEl.addEventListener("click", function(){
             currentCity = city
             selectedCity.textContent = city.name + ", " + city.country
+            getWeather()
         })
 
     })
 })
+
+function getWeather() {
+    fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${currentCity.coord.lat}&lon=${currentCity.coord.lon}&appid=${apiKey}&units=metric`)
+    .then (request => request.json())
+    .then (function(data) {
+        
+    })
+
+
+}
+
 
