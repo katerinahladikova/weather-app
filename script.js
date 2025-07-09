@@ -1,10 +1,13 @@
-
 const apiKey = "fb3ca3d4a41c73fdf5013f2563d02016"
 const searchInput = document.getElementById("search")
 const searchList = document.getElementById("search-list")
 const selectedCity = document.getElementById("selected-city")
 const dayTemperature = document.getElementById("day-temperature")
+const humidity = document.getElementById("climate-humi")
+const feels = document.getElementById("climate-feels")
+const wind = document.getElementById("climate-wind")
 const date = document.getElementById("date")
+const forecast = document.getElementById("forecast")
 const cities = await getCities()
 const lang = navigator.language
 
@@ -31,6 +34,7 @@ function renderCity(city){
         selectedCity.textContent = city.name + ", " + city.country
         const weather = await getWeather(city)
         renderWeather(weather)
+        renderForecast(weather)
         clear()
     })
 
@@ -59,27 +63,54 @@ async function getWeather(city) {
 }
 
 function renderWeather(weather) {
-    const weatherData = formatWeatherData(weather, lang)
-    dayTemperature.textContent = weatherData.temperature
+    const weatherData = formatWeatherData(weather.list[0], lang)
+    dayTemperature.textContent = weatherData.temperature + " °C"
+    wind.textContent = weatherData.wind
+    humidity.textContent = weatherData.humidity
+    feels.textContent = weatherData.feels
     date.textContent = weatherData.dateText
+
     
     console.log(weather)
 }
 
 function formatWeatherData(weather, lang) {
-    const d = new Date(weather.list[0].dt * 1000)
+    const d = new Date(weather.dt * 1000)
     const adjustedTime = new Date(d.getTime() + d.getTimezoneOffset() * 60000)
 
     const dayName = adjustedTime.toLocaleDateString(lang, { weekday: "long" })
     const monthName = adjustedTime.toLocaleDateString(lang, { month: "long" })
     const time = adjustedTime.toLocaleTimeString(lang).replace(/:\d{2}(?=\s|$)/, "")
 
-    const formattedDate = `${adjustedTime.getDay()}. ${monthName} | ${time}`
+    const formattedDate = `${adjustedTime.getDate()}. ${monthName} | ${time}`
     
     return {
-        temperature: weather.list[0].main.temp,
-        dateText: `${dayName}, ${formattedDate}`
+        temperature: weather.main.temp,
+        dateText: `${dayName}, ${formattedDate}`,
+        wind: weather.wind.speed,
+        humidity: weather.main.humidity,
+        feels: weather.main.feels_like
     }
 }
+
+function renderForecast (weather) {
+    for (let i = 1; i < weather.list.length; i++) {
+        const forecastData = formatWeatherData(weather.list[i])
+        forecast.appendChild(createForecastDay(forecastData))
+    }
+}
+
+function createForecastDay(weather) {
+    const forecastDate = document.createElement("div")
+    const forecastDay = document.createElement("div")
+    const forecastTemp = document.createElement("div")
+
+    forecastDay.textContent = weather.dateText
+    forecastTemp.textContent = weather.temperature
+    forecastDate.appendChild(forecastDay, forecastTemp)
+
+    return forecastDate
+}
+
 
 
