@@ -1,0 +1,10 @@
+
+
+
+#search-list {
+    display: none;
+}
+
+input:focus + #search-list, #search-list:hover {
+display: block;
+}
