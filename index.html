@@ -1,32 +1,95 @@
 <!DOCTYPE html>
 <html lang="cs">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=location_on,search" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=air,cool_to_dry,dry,location_on,search" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+        rel="stylesheet">
     <link href="/style.css" rel="stylesheet">
     <title>Počasí</title>
 </head>
+
 <body>
     <main>
         <div class="container">
             <div id="forecast" class="dark-background">
-                <div id="day-temperature"></div>
-                <div id="date"></div>
+                <div id="day-temperature">-- °C</div>
+                <div id="date">--- | ---</div>
                 <div id="climate">
-                    <div id="climate-wind"></div>
-                    <div id="climate-feels"></div>
-                    <div id="climate-humi"></div>
+                    <div class="climate">
+                        <span class="material-symbols-outlined">air</span>
+                        <span id="climate-wind">---</span>
+                    </div>
+                    <div class="climate">
+                        <span class="material-symbols-outlined">dry</span>
+                        <span id="climate-feels">---</span>
+                    </div>
+                    <div class="climate">
+                        <span class="material-symbols-outlined">cool_to_dry</span>
+                        <span id="climate-humi">---</span>
+                    </div>
                 </div>
-                <div id="forecast-days"></div>
+                <div id="forecast-days">
+                    <div>
+                        <div class="frameDate">
+                            <img src="https://openweathermap.org/img/wn/03d@2x.png">
+                            <div>---</div>
+                        </div>
+                        <div class="frameTemp">
+                            <div>-- °C</div>
+                            <div>-- °C</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="frameDate">
+                        <img src="https://openweathermap.org/img/wn/03d@2x.png">
+                            <div>---</div>
+                        </div>
+                        <div class="frameTemp">
+                            <div>-- °C</div>
+                            <div>-- °C</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="frameDate"><img src="https://openweathermap.org/img/wn/03d@2x.png">
+                            <div>---</div>
+                        </div>
+                        <div class="frameTemp">
+                            <div>-- °C</div>
+                            <div>-- °C</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="frameDate">
+                        <img src="https://openweathermap.org/img/wn/03d@2x.png">
+                            <div>---</div>
+                        </div>
+                        <div class="frameTemp">
+                            <div>-- °C</div>
+                            <div>-- °C</div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="frameDate">
+                        <img src="https://openweathermap.org/img/wn/03d@2x.png">
+                            <div>---</div>
+                        </div>
+                        <div class="frameTemp">
+                            <div>-- °C</div>
+                            <div>-- °C</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div>
                 <div class="dark-background">
                     <span class="material-symbols-outlined">location_on</span>
-                    <span id="selected-city"></span>
+                    <span id="selected-city">---</span>
                 </div>
                 <div class="city-search">
                     <input id="search" type="text" autocomplete="off">
@@ -38,4 +101,5 @@
     </main>
     <script src="/script.js" type="module"></script>
 </body>
+
 </html>

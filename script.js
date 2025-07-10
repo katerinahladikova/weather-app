@@ -66,10 +66,10 @@ async function getWeather(city) {
 
 function renderWeather(weather) {
     const weatherData = formatWeatherData(weather.list[0], lang)
-    dayTemperature.textContent = weatherData.temperature + " °C"
-    wind.textContent = weatherData.wind
-    humidity.textContent = weatherData.humidity
-    feels.textContent = weatherData.feels
+    dayTemperature.textContent = Math.round(weatherData.temperature) + " °C"
+    wind.textContent = weatherData.wind + " m/s"
+    humidity.textContent = weatherData.humidity + "%"
+    feels.textContent = Math.round(weatherData.feels) + " °C"
     date.textContent = weatherData.dateText
 }
 
