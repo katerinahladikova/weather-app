@@ -128,6 +128,10 @@ function renderForecast (weather) {
 }
 
 function createForecastDay(weather) {
+    const frameDate = document.createElement("div")
+    frameDate.classList.add("frameDate")
+    const frameTemp = document.createElement("div")
+    frameTemp.classList.add("frameTemp")
     const forecastDate = document.createElement("div")
     const forecastDay = document.createElement("div")
     const tempDay = document.createElement("div")
@@ -135,11 +139,12 @@ function createForecastDay(weather) {
     const forecastIcon = document.createElement("img")
 
     forecastDay.textContent = weather.data[0].dateTextNoTime
-    tempDay.textContent = weather.data[0].temperature
-    tempNight.textContent = weather.data[1].temperature
+    tempDay.textContent = Math.round(weather.data[0].temperature) + " °C"
+    tempNight.textContent = Math.round(weather.data[1].temperature) + " °C"
     forecastIcon.src = `https://openweathermap.org/img/wn/${weather.data[1].icon}@2x.png`
-    forecastDate.append(forecastDay, tempDay, tempNight, forecastIcon)
-
+    forecastDate.append(frameDate, frameTemp)
+    frameTemp.append(tempDay, tempNight)
+    frameDate.append(forecastIcon, forecastDay)
 
     return forecastDate
 }
