@@ -62,6 +62,7 @@ async function getWeather(city) {
     return data
 }
 
+
 function renderWeather(weather) {
     const weatherData = formatWeatherData(weather.list[0], lang)
     dayTemperature.textContent = weatherData.temperature + " °C"
@@ -72,6 +73,17 @@ function renderWeather(weather) {
 
     
     console.log(weather)
+}
+
+function getDailyWeather(weather) {
+    const result = []
+    for (let i = 0; i < weather.list.length; i++) {
+        const data = formatWeatherData(weather.list[i])
+        if (result.filter(function(day) {
+            day.date === data.date
+        }))
+        {}
+    }
 }
 
 function formatWeatherData(weather, lang) {
@@ -87,6 +99,7 @@ function formatWeatherData(weather, lang) {
     return {
         temperature: weather.main.temp,
         dateText: `${dayName}, ${formattedDate}`,
+        date: adjustedTime,
         wind: weather.wind.speed,
         humidity: weather.main.humidity,
         feels: weather.main.feels_like
@@ -96,7 +109,9 @@ function formatWeatherData(weather, lang) {
 function renderForecast (weather) {
     for (let i = 1; i < weather.list.length; i++) {
         const forecastData = formatWeatherData(weather.list[i])
-        forecast.appendChild(createForecastDay(forecastData))
+        if (forecastData.date.getHours() === 0 || forecastData.date.getHours() === 15) {
+            forecast.appendChild(createForecastDay(forecastData))
+        }
     }
 }
 
@@ -111,6 +126,7 @@ function createForecastDay(weather) {
 
     return forecastDate
 }
+
 
 
 
