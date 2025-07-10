@@ -6,6 +6,7 @@ const dayTemperature = document.getElementById("day-temperature")
 const humidity = document.getElementById("climate-humi")
 const feels = document.getElementById("climate-feels")
 const wind = document.getElementById("climate-wind")
+const forecastDays = document.getElementById("forecast-days")
 const date = document.getElementById("date")
 const forecast = document.getElementById("forecast")
 const cities = await getCities()
@@ -70,20 +71,25 @@ function renderWeather(weather) {
     humidity.textContent = weatherData.humidity
     feels.textContent = weatherData.feels
     date.textContent = weatherData.dateText
-
-    
-    console.log(weather)
 }
 
 function getDailyWeather(weather) {
     const result = []
-    for (let i = 0; i < weather.list.length; i++) {
-        const data = formatWeatherData(weather.list[i])
-        if (result.filter(function(day) {
-            day.date === data.date
-        }))
-        {}
+    for (let i = 0; i < weather.length; i++) {
+        const data = formatWeatherData(weather[i])
+        const filteredData = result.filter(function(day){
+            return day.day === data.date.getDate()
+        })
+        if (filteredData.length === 0) {
+            result.push({
+                day: data.date.getDate(),
+                data: [data]
+            })
+        } else {
+            filteredData[0].data.push(data)
+        }
     }
+    return result
 }
 
 function formatWeatherData(weather, lang) {
@@ -94,11 +100,12 @@ function formatWeatherData(weather, lang) {
     const monthName = adjustedTime.toLocaleDateString(lang, { month: "long" })
     const time = adjustedTime.toLocaleTimeString(lang).replace(/:\d{2}(?=\s|$)/, "")
 
-    const formattedDate = `${adjustedTime.getDate()}. ${monthName} | ${time}`
+    const formattedDate = `${adjustedTime.getDate()}. ${monthName}`
     
     return {
         temperature: weather.main.temp,
-        dateText: `${dayName}, ${formattedDate}`,
+        dateText: `${dayName}, ${formattedDate} | ${time}`,
+        dateTextNoTime: `${dayName}, ${formattedDate}`,
         date: adjustedTime,
         wind: weather.wind.speed,
         humidity: weather.main.humidity,
@@ -107,22 +114,28 @@ function formatWeatherData(weather, lang) {
 }
 
 function renderForecast (weather) {
-    for (let i = 1; i < weather.list.length; i++) {
-        const forecastData = formatWeatherData(weather.list[i])
-        if (forecastData.date.getHours() === 0 || forecastData.date.getHours() === 15) {
-            forecast.appendChild(createForecastDay(forecastData))
-        }
+    forecastDays.innerHTML = ""
+    const filteredDates = weather.list.filter(function(data){
+        const forecastData = formatWeatherData(data)
+        return forecastData.date.getHours() === 0 || forecastData.date.getHours() === 15
+    })
+    console.log(filteredDates)
+    const dailyWeather = getDailyWeather(filteredDates)
+    for (let i = 0; i < dailyWeather.length; i++) {
+        forecastDays.appendChild(createForecastDay(dailyWeather[i]))
     }
 }
 
 function createForecastDay(weather) {
     const forecastDate = document.createElement("div")
     const forecastDay = document.createElement("div")
-    const forecastTemp = document.createElement("div")
+    const tempDay = document.createElement("div")
+    const tempNight = document.createElement("div")
 
-    forecastDay.textContent = weather.dateText
-    forecastTemp.textContent = weather.temperature
-    forecastDate.appendChild(forecastDay, forecastTemp)
+    forecastDay.textContent = weather.data[0].dateTextNoTime
+    tempDay.textContent = weather.data[0].temperature
+    tempNight.textContent = weather.data[1].temperature
+    forecastDate.append(forecastDay, tempDay, tempNight)
 
     return forecastDate
 }
