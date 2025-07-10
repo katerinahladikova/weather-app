@@ -105,6 +105,7 @@ function formatWeatherData(weather, lang) {
     return {
         temperature: weather.main.temp,
         dateText: `${dayName}, ${formattedDate} | ${time}`,
+        icon: weather.weather[0].icon,
         dateTextNoTime: `${dayName}, ${formattedDate}`,
         date: adjustedTime,
         wind: weather.wind.speed,
@@ -131,11 +132,14 @@ function createForecastDay(weather) {
     const forecastDay = document.createElement("div")
     const tempDay = document.createElement("div")
     const tempNight = document.createElement("div")
+    const forecastIcon = document.createElement("img")
 
     forecastDay.textContent = weather.data[0].dateTextNoTime
     tempDay.textContent = weather.data[0].temperature
     tempNight.textContent = weather.data[1].temperature
-    forecastDate.append(forecastDay, tempDay, tempNight)
+    forecastIcon.src = `https://openweathermap.org/img/wn/${weather.data[1].icon}@2x.png`
+    forecastDate.append(forecastDay, tempDay, tempNight, forecastIcon)
+
 
     return forecastDate
 }
