@@ -55,7 +55,7 @@ function search(){
     })
 }
 
-searchInput.addEventListener("keypress", search)
+searchInput.addEventListener("keyup", search)
 
 async function getWeather(city) {
     const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${city.coord.lat}&lon=${city.coord.lon}&appid=${apiKey}&units=metric`)
@@ -123,7 +123,9 @@ function renderForecast (weather) {
     console.log(filteredDates)
     const dailyWeather = getDailyWeather(filteredDates)
     for (let i = 0; i < dailyWeather.length; i++) {
-        forecastDays.appendChild(createForecastDay(dailyWeather[i]))
+        if (dailyWeather[i].day !== (new Date()).getDate()) {
+            forecastDays.appendChild(createForecastDay(dailyWeather[i]))
+        }
     }
 }
 
@@ -138,10 +140,12 @@ function createForecastDay(weather) {
     const tempNight = document.createElement("div")
     const forecastIcon = document.createElement("img")
 
+    const icon = weather.data[1] ? weather.data[1].icon : weather.data[0].icon
+
     forecastDay.textContent = weather.data[0].dateTextNoTime
-    tempDay.textContent = Math.round(weather.data[0].temperature) + " °C"
-    tempNight.textContent = Math.round(weather.data[1].temperature) + " °C"
-    forecastIcon.src = `https://openweathermap.org/img/wn/${weather.data[1].icon}@2x.png`
+    tempDay.textContent = (Math.round(weather.data[0]?.temperature) || "---")  + " °C"
+    tempNight.textContent = (Math.round(weather.data[1]?.temperature) || "---") + " °C"
+    forecastIcon.src = `https://openweathermap.org/img/wn/${icon}@2x.png`
     forecastDate.append(frameDate, frameTemp)
     frameTemp.append(tempDay, tempNight)
     frameDate.append(forecastIcon, forecastDay)
