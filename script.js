@@ -10,6 +10,7 @@ const forecastDays = document.getElementById("forecast-days")
 const date = document.getElementById("date")
 const forecast = document.getElementById("forecast")
 const cities = await getCities()
+const todayForecast = document.getElementById("today-forecast")
 const lang = navigator.language
 
 async function getCities() {
@@ -36,6 +37,7 @@ function renderCity(city){
         const weather = await getWeather(city)
         renderWeather(weather)
         renderForecast(weather)
+        renderTodayForecast(weather)
         clear()
     })
 
@@ -104,6 +106,7 @@ function formatWeatherData(weather, lang) {
     
     return {
         temperature: weather.main.temp,
+        time: time,
         dateText: `${dayName}, ${formattedDate} | ${time}`,
         icon: weather.weather[0].icon,
         dateTextNoTime: `${dayName}, ${formattedDate}`,
@@ -154,5 +157,29 @@ function createForecastDay(weather) {
 }
 
 
+function createTodayForecast(data) {
 
+const todaysWeather = document.createElement("div")
+const tempToday = document.createElement("div")
+const timeToday = document.createElement("div")
+const iconToday = document.createElement("img")
+
+tempToday.textContent = Math.round(data.temperature) + " °C"
+timeToday.textContent = data.time
+iconToday.src = `https://openweathermap.org/img/wn/${data.icon}@2x.png`
+todaysWeather.append(timeToday, iconToday, tempToday)
+
+return todaysWeather
+}
+
+function renderTodayForecast(weather) {
+    todayForecast.innerHTML = ""
+    for (let i = 0; i < weather.list.length; i++) {
+        const data = formatWeatherData(weather.list[i])
+
+        if (data.date.getDate() === (new Date()).getDate()) {
+            todayForecast.append(createTodayForecast(data))
+        }
+    }
+}
 
