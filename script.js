@@ -160,26 +160,29 @@ function createForecastDay(weather) {
 function createTodayForecast(data) {
 
 const todaysWeather = document.createElement("div")
+todaysWeather.classList.add("dark-background", "todaysWeather")
 const tempToday = document.createElement("div")
 const timeToday = document.createElement("div")
 const iconToday = document.createElement("img")
+const date = document.createElement("div")
+timeToday.classList.add("timeToday")
+
+date.textContent = (data.date.getDate() === (new Date()).getDate()) ? "dnes" : "zítra"
 
 tempToday.textContent = Math.round(data.temperature) + " °C"
 timeToday.textContent = data.time
 iconToday.src = `https://openweathermap.org/img/wn/${data.icon}@2x.png`
-todaysWeather.append(timeToday, iconToday, tempToday)
+todaysWeather.append(date, timeToday, iconToday, tempToday)
 
 return todaysWeather
 }
 
 function renderTodayForecast(weather) {
     todayForecast.innerHTML = ""
-    for (let i = 0; i < weather.list.length; i++) {
+    for (let i = 0; i < 8; i++) {
         const data = formatWeatherData(weather.list[i])
 
-        if (data.date.getDate() === (new Date()).getDate()) {
-            todayForecast.append(createTodayForecast(data))
-        }
+        todayForecast.append(createTodayForecast(data))
     }
 }
 
