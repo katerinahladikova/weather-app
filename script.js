@@ -41,7 +41,7 @@ function getLocation() {
 getLocation()
 
 async function getCities() {
-    const response = await fetch("/city.list.json")
+    const response = await fetch("./city.list.json")
     const data = await response.json()
     return data
 }
