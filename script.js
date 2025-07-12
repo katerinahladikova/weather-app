@@ -12,6 +12,33 @@ const forecast = document.getElementById("forecast")
 const cities = await getCities()
 const todayForecast = document.getElementById("today-forecast")
 const lang = navigator.language
+const myLocation = document.getElementById("my-location")
+
+myLocation.addEventListener("click", getLocation)
+
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(async function(position) {
+        const weather = await getWeather({
+            coord: {
+                lat: position.coords.latitude,
+                lon: position.coords.longitude
+            }
+        })
+        selectedCity.textContent = weather.city.name + ", " + weather.city.country
+        renderWeather(weather)
+        renderForecast(weather)
+        renderTodayForecast(weather)
+        clear()
+
+    }, function() {
+        console.warn("Location is not availible")
+    });
+  } else {
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+getLocation()
 
 async function getCities() {
     const response = await fetch("/city.list.json")
@@ -19,20 +46,20 @@ async function getCities() {
     return data
 }
 
-function filterCities(cities, value){
+function filterCities(cities, value) {
     return cities.filter(city => {
         return city.name.toLowerCase().includes(value.toLowerCase())
     })
 }
 
-function renderCity(city){
+function renderCity(city) {
     const cityEl = document.createElement("div")
     const countryEl = document.createElement("span")
     cityEl.textContent = city.name
     countryEl.textContent = city.country
     cityEl.appendChild(countryEl)
-    
-    cityEl.addEventListener("click", async function(){
+
+    cityEl.addEventListener("click", async function () {
         selectedCity.textContent = city.name + ", " + city.country
         const weather = await getWeather(city)
         renderWeather(weather)
@@ -44,12 +71,12 @@ function renderCity(city){
     return cityEl
 }
 
-function clear () {
+function clear() {
     searchInput.value = ""
     searchList.innerHTML = ""
 }
 
-function search(){
+function search() {
     const citiesFilter = filterCities(cities, searchInput.value)
     searchList.innerHTML = ""
     citiesFilter.slice(0, 10).forEach(city => {
@@ -79,7 +106,7 @@ function getDailyWeather(weather) {
     const result = []
     for (let i = 0; i < weather.length; i++) {
         const data = formatWeatherData(weather[i])
-        const filteredData = result.filter(function(day){
+        const filteredData = result.filter(function (day) {
             return day.day === data.date.getDate()
         })
         if (filteredData.length === 0) {
@@ -103,7 +130,7 @@ function formatWeatherData(weather, lang) {
     const time = adjustedTime.toLocaleTimeString(lang).replace(/:\d{2}(?=\s|$)/, "")
 
     const formattedDate = `${adjustedTime.getDate()}. ${monthName}`
-    
+
     return {
         temperature: weather.main.temp,
         time: time,
@@ -117,9 +144,9 @@ function formatWeatherData(weather, lang) {
     }
 }
 
-function renderForecast (weather) {
+function renderForecast(weather) {
     forecastDays.innerHTML = ""
-    const filteredDates = weather.list.filter(function(data){
+    const filteredDates = weather.list.filter(function (data) {
         const forecastData = formatWeatherData(data)
         return forecastData.date.getHours() === 0 || forecastData.date.getHours() === 15
     })
@@ -146,7 +173,7 @@ function createForecastDay(weather) {
     const icon = weather.data[1] ? weather.data[1].icon : weather.data[0].icon
 
     forecastDay.textContent = weather.data[0].dateTextNoTime
-    tempDay.textContent = (Math.round(weather.data[0]?.temperature) || "---")  + " °C"
+    tempDay.textContent = (Math.round(weather.data[0]?.temperature) || "---") + " °C"
     tempNight.textContent = (Math.round(weather.data[1]?.temperature) || "---") + " °C"
     forecastIcon.src = `https://openweathermap.org/img/wn/${icon}@2x.png`
     forecastDate.append(frameDate, frameTemp)
@@ -159,22 +186,22 @@ function createForecastDay(weather) {
 
 function createTodayForecast(data) {
 
-const todaysWeather = document.createElement("div")
-todaysWeather.classList.add("dark-background", "todaysWeather")
-const tempToday = document.createElement("div")
-const timeToday = document.createElement("div")
-const iconToday = document.createElement("img")
-const date = document.createElement("div")
-timeToday.classList.add("timeToday")
+    const todaysWeather = document.createElement("div")
+    todaysWeather.classList.add("dark-background", "todaysWeather")
+    const tempToday = document.createElement("div")
+    const timeToday = document.createElement("div")
+    const iconToday = document.createElement("img")
+    const date = document.createElement("div")
+    timeToday.classList.add("timeToday")
 
-date.textContent = (data.date.getDate() === (new Date()).getDate()) ? "dnes" : "zítra"
+    date.textContent = (data.date.getDate() === (new Date()).getDate()) ? "dnes" : "zítra"
 
-tempToday.textContent = Math.round(data.temperature) + " °C"
-timeToday.textContent = data.time
-iconToday.src = `https://openweathermap.org/img/wn/${data.icon}@2x.png`
-todaysWeather.append(date, timeToday, iconToday, tempToday)
+    tempToday.textContent = Math.round(data.temperature) + " °C"
+    timeToday.textContent = data.time
+    iconToday.src = `https://openweathermap.org/img/wn/${data.icon}@2x.png`
+    todaysWeather.append(date, timeToday, iconToday, tempToday)
 
-return todaysWeather
+    return todaysWeather
 }
 
 function renderTodayForecast(weather) {

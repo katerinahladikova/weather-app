@@ -5,9 +5,29 @@
     cursor: default;
 }
 
+#my-location {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    top: 0;
+    right: 0;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    appearance: none;
+    color: rgb(95, 95, 95);
+    cursor: pointer;
+    z-index: 3;
+}
+
+#my-location span {
+    cursor: pointer;
+}
+
 body {
-    background-image: url("/images/cloudy.webp");
+    background-image: url("/images/background.webp");
     background-size: cover;
+    background-position: center;
     padding-block: 50px;
 }
 
