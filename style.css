@@ -236,3 +236,42 @@ display: block;
 #climate-wind, #climate-feels, #climate-humi {
     margin-top: 5px;
 }
+
+@media (width < 1220px) {
+    #today-forecast {
+        gap: 10px;
+    }
+}
+
+@media (width < 1024px) {
+    .right-side {
+        justify-content: flex-start;
+        gap: 20px;
+    }
+
+    #forecast {
+        position: static;
+        border-radius: 30px;;
+    }
+
+    .container {
+        flex-direction: column-reverse;
+        padding: 0;
+        height: auto;
+    }
+}
+
+@media (width < 678px) {
+#today-forecast {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+#search {
+    width: 300px;
+}
+
+#selected-city {
+    font-size: 18px;
+}
+}
